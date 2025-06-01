@@ -1,0 +1,25 @@
+{
+    "manifest_version": 3,
+    "name": "Hazel Full-Screen Tab",
+    "version": "1.0",
+    "description": "Opens a full-screen custom page in a new tab when clicking the extension icon or using Ctrl+Shift+Y.",
+    "permissions": [
+        "storage",
+        "tabs"
+    ],
+    "chrome_url_overrides": {
+        "newtab": "newtab.html"
+    },
+    "action": {},
+    "background": {
+        "service_worker": "background.js"
+    },
+    "commands": {
+        "open-extension": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+Y"
+            },
+            "description": "Open the custom full-screen tab"
+        }
+    }
+}
