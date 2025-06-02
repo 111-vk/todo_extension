@@ -1,4 +1,8 @@
 console.log("Backend script is running...");
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("DOM fully loaded and parsed. Initializing event listeners...");
+    add_button.click();
+});
 const add_button = document.querySelector("#add");
 
 add_button.addEventListener("click", ask_name);
@@ -12,23 +16,122 @@ renderTasks();
 
 // render the stored tasks from localStorage to show on the dashboard 
 function renderTasks() {
-    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    const taskList = document.querySelector("#list");
-    taskList.innerHTML = ""; // Clear existing tasks
+    if (!chrome.storage || !chrome.storage.sync) {
+        console.error("chrome.storage.sync is not available. Ensure the script is running in a Chrome extension context.");
+        return;
+    }
 
-    tasks.forEach((task, index) => {
-        const taskItem = document.createElement("div");
-        taskItem.className = "task-item";
-        taskItem.innerHTML = `
-            <h3>${task.task_name}</h3>
-            <p>${task.task_description}</p>
-            <p>Priority: ${task.task_priority}</p>
-            <p>Deadline: ${task.task_deadline}</p>
-            <p>Time: ${task.task_time}</p>
-        `;
-        taskList.appendChild(taskItem);
-    });
+    chrome.storage.sync.get("tasks", function (result) {
+        const tasks = result.tasks || [];
+        // console.log("Tasks retrieved:", tasks); // Debugging log
+
+        // Clear existing tasks before rendering
+        const taskList = document.querySelector("#list");
+        if (!taskList) {
+            console.error("Task list element not found in the DOM.");
+            return;
+        }
+        taskList.innerHTML = ""; // Clear existing tasks
+
+        // Render each task
+        tasks.forEach((task) => {
+            const taskItem = document.createElement("div");
+            taskItem.className = "task-item";
+            taskItem.innerHTML = `
+                <h3>${task.task_name || "Unnamed Task"}</h3>
+                <p>${task.task_description || "No description"}</p>
+                <p>Priority: ${task.task_priority || "Not set"}</p>
+                <p>Deadline: ${task.task_deadline || "No deadline"}</p>
+                <p>Time: ${task.task_time || "No time"}</p>
+            `;
+            taskList.appendChild(taskItem);
+        });
+        console.log("Tasks rendered successfully.");
+    })
+   
 }
+
+
+// i was trying to make it look good :(
+
+
+// function renderTasks() {
+//   console.log("Rendering tasks...");
+
+//   // Retrieve tasks from chrome.storage.sync
+//   chrome.storage.sync.get("tasks", function (result) {
+//     const tasks = result.tasks || [];
+//     console.log("Tasks retrieved:", tasks); // Debugging log
+
+//     // Clear existing tasks in priority containers
+//     document.getElementById("priority-1").innerHTML = "";
+//     document.getElementById("priority-2").innerHTML = "";
+//     document.getElementById("priority-3").innerHTML = "";
+
+
+
+//     tasks.forEach(task => {
+//       console.log("Rendering task:", task); // Debugging log
+//       console.log("Task priority:", task.task_priority); // Debugging log for priority
+
+//       const taskDiv = document.createElement("div");
+//       taskDiv.classList.add("task");
+//       Object.assign(taskDiv.style, {
+//         width: "98%", // Slightly wider for a cleaner edge-to-edge look
+//         margin: "5px auto", // Reduced margin for a tighter layout
+//         padding: "10px", // Reduced padding for simplicity
+//         borderRadius: "5px", // Smaller radius for a sharper look
+//         background: "rgba(black)", // Lighter background for minimalism
+//         fontFamily: "'Arial', sans-serif",
+//         fontSize: "0.9rem", // Slightly smaller font for a compact feel
+//         color: "#ffffff", // Keep white text for contrast
+//         // borderLeft: `3px solid ${priorityColors[task.task_priority] || "#ffffff"}`, // Thinner priority-based border
+//         transition: "transform 0.2s ease" // Simplified transition (removed box-shadow transition)
+//       });
+
+//       // Add task details with better formatting
+//       taskDiv.innerHTML = `
+//         <h3 style="margin: 0 0 10px; font-size: 1.2rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
+//           ${task.task_name || "Unnamed Task"}
+//         </h3>
+//         <p style="margin: 5px 0; font-size: 0.9rem;">
+//           <strong>Priority:</strong> ${task.task_priority || "Not set"}
+//         </p>
+//         <p style="margin: 5px 0; font-size: 0.9rem;">
+//           <strong>Deadline:</strong> ${task.task_deadline || "No deadline"}
+//         </p>
+//         <p style="margin: 5px 0; font-size: 0.9rem;">
+//           <strong>Time:</strong> ${task.task_time || "No time"}
+//         </p>
+//         <p style="margin: 5px 0; font-size: 0.9rem;">
+//           <strong>Description:</strong> ${task.task_description || "No description"}
+//         </p>
+//       `;
+
+
+//       // Append to the appropriate priority container
+//       if (task.task_priority === "high") {
+//         console.log("Appending to High priority container"); // Debugging log
+//         const priorityContainer = document.getElementById("priority-1");
+//         priorityContainer.appendChild(taskDiv);
+//       } else if (task.task_priority === "medium") {
+//         console.log("Appending to Medium priority container"); // Debugging log
+//         const priorityContainer = document.getElementById("priority-2");
+//         priorityContainer.appendChild(taskDiv);
+//       } else if (task.task_priority === "low") {
+//         console.log("Appending to Low priority container"); // Debugging log
+//         const priorityContainer = document.getElementById("priority-3");
+//         priorityContainer.appendChild(taskDiv);
+//       } else {
+//         console.warn("Task priority does not match any container:", task.task_priority); // Debugging log for unmatched priority
+//       }
+//     });
+//   });
+// }
+
+
+
+
 
 
 function ask_name() {
@@ -83,6 +186,19 @@ function ask_name() {
     });
     name_diver.appendChild(name_diver_heading);
 
+    const exit_info = document.createElement("p");
+    exit_info.textContent = "Press ESC to exit";
+    Object.assign(exit_info.style, {
+        margin: "0 0 20px",
+        marginTop: "15px",
+        fontSize: "14px",
+        fontWeight: "400",
+        textTransform: "uppercase",
+        letterSpacing: "1px",
+        textAlign: "center",
+        color: "red" // Light text for contrast
+    });
+
     name_input.type = "text";
     name_input.placeholder = "Enter a Task name";
 
@@ -96,6 +212,8 @@ function ask_name() {
     });
 
     name_diver.appendChild(name_input);
+
+    name_diver.appendChild(exit_info);
     document.body.appendChild(name_diver);
 
     name_input.focus();
@@ -765,36 +883,75 @@ function showtdata() {
 }
 
 // send the data to localStorage and reload the page
+// function send_data() {
+//     // Retrieve the existing tasks from localStorage
+//     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+//     // Create a new task object
+//     const newTask = {
+//         task_name: task_name,
+//         task_description: task_description,
+//         task_priority: task_priority,
+//         task_deadline: task_deadline,
+//         task_time: task_time
+//     };
+
+//     // Add the new task to the tasks array
+//     tasks.push(newTask);
+
+//     // Save the updated tasks array back to localStorage
+//     localStorage.setItem("tasks", JSON.stringify(tasks));
+
+//     // Clear the task details after sending
+//     task_name = "";
+//     task_description = "";
+//     task_priority = "";
+//     task_deadline = "";
+//     task_time = "";
+
+//     // Reload the page or update the UI
+//     location.reload();
+// }
+
+
+
 function send_data() {
-    // Retrieve the existing tasks from localStorage
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    if (!chrome.storage || !chrome.storage.sync) {
+        console.error("chrome.storage.sync is not available. Ensure the script is running in a Chrome extension context.");
+        return;
+    }
 
-    // Create a new task object
-    const newTask = {
-        task_name: task_name,
-        task_description: task_description,
-        task_priority: task_priority,
-        task_deadline: task_deadline,
-        task_time: task_time
-    };
+    // Retrieve the existing tasks from chrome.storage
+    chrome.storage.sync.get(['tasks'], (result) => {
+        const tasks = result.tasks || [];
 
-    // Add the new task to the tasks array
-    tasks.push(newTask);
+        // Create a new task object
+        const newTask = {
+            task_name: task_name,
+            task_description: task_description,
+            task_priority: task_priority,
+            task_deadline: task_deadline,
+            task_time: task_time
+        };
 
-    // Save the updated tasks array back to localStorage
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+        // Add the new task to the tasks array
+        tasks.push(newTask);
 
-    // Clear the task details after sending
-    task_name = "";
-    task_description = "";
-    task_priority = "";
-    task_deadline = "";
-    task_time = "";
+        // Save the updated tasks array back to chrome.storage
+        chrome.storage.sync.set({ tasks }, () => {
+            console.log('Task saved successfully:', newTask);
 
-    // Reload the page or update the UI
-    location.reload();
+            // Clear the task details after sending
+            task_name = "";
+            task_description = "";
+            task_priority = "";
+            task_deadline = "";
+            task_time = "";
+
+            // Update the UI by re-rendering tasks
+            location.reload(); // Reload the page to reflect changes
+            // renderTasks(); // Alternatively, you can call renderTasks() to update the UI without reloading
+        
+        });
+    });
 }
-
-
-
-
