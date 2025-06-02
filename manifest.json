@@ -17,7 +17,7 @@
     "commands": {
         "open-extension": {
             "suggested_key": {
-                "default": "Ctrl+Shift+Y"
+                "default": "Ctrl+space"
             },
             "description": "Open the custom full-screen tab"
         }

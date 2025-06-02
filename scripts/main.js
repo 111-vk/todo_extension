@@ -35,15 +35,15 @@ function create_priorty_contaner() {
   const priority1 = document.getElementById("priority-1");
   const priority2 = document.getElementById("priority-2");
   const priority3 = document.getElementById("priority-3");
-  Object.assign(priority1.style, {
-    backgroundColor: "rgba(255, 0, 0, 0.8)", // Red for high priority
-  });
-  Object.assign(priority2.style, {
-    backgroundColor: "rgba(255, 165, 0, 0.8)", // Orange for medium priority
-  });
-  Object.assign(priority3.style, {
-    backgroundColor: "rgba(0, 255, 0, 0.8)", // Green for low priority
-  });
+  // Object.assign(priority1.style, {
+  //   backgroundColor: "rgba(255, 0, 0, 0.8)", // Red for high priority
+  // });
+  // Object.assign(priority2.style, {
+  //   backgroundColor: "rgba(255, 165, 0, 0.8)", // Orange for medium priority
+  // });
+  // Object.assign(priority3.style, {
+  //   backgroundColor: "rgba(0, 255, 0, 0.8)", // Green for low priority
+  // });
   renderTasks()
 }
 function renderTasks() {
@@ -112,8 +112,34 @@ function renderTasks() {
         }
       });
 
-      // Prepend the checkbox to the task div
+      // Add a button to remove the task
+      const removeButton = document.createElement("button");
+      removeButton.textContent = "Remove";
+      Object.assign(removeButton.style, {
+        marginLeft: "10px",
+        padding: "5px 10px",
+        backgroundColor: "#ff4444",
+        color: "#ffffff",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        fontSize: "0.8rem"
+      });
+      removeButton.addEventListener("click", () => {
+        taskDiv.remove();
+        // Optionally, remove the task from storage
+        chrome.storage.sync.get("tasks", function (result) {
+          const tasks = result.tasks || [];
+          const updatedTasks = tasks.filter(t => t.task_name !== task.task_name);
+          chrome.storage.sync.set({ tasks: updatedTasks }, () => {
+            console.log("Task removed successfully:", task.task_name);
+          });
+        });
+      });
+
+      // Prepend the checkbox and append the remove button to the task div
       taskDiv.prepend(checkbox);
+      taskDiv.appendChild(removeButton);
 
       // Append to the appropriate priority container
       if (task.task_priority === "high") {
