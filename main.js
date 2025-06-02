@@ -48,7 +48,7 @@ function create_priorty_contaner() {
 
 function renderTasks() {
   const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  console.log("Rendering tasks:", tasks);
+  // console.log("Rendering tasks:", tasks);
 
   // Clear existing tasks in priority containers
   document.getElementById("priority-1").innerHTML = "";
