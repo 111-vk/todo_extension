@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Hazel Full-Screen Tab",
+    "name": "notes extension(browser)",
     "version": "1.0",
     "description": "Opens a full-screen custom page in a new tab when clicking the extension icon or using Ctrl+Shift+Y.",
     "permissions": [
