@@ -21,7 +21,7 @@ The Notes Extension is a browser-based task management tool designed to help use
 
 
 ## Keybinds
-The default keybind to open the Notes Extension is `Ctrl+Shift+E`.
+The default keybind to open the Notes Extension is `Ctrl+Shift+Y`.
 
 ### How to Change the Keybind
 1. Open your browser and navigate to the extensions page:
