@@ -12,7 +12,7 @@
     },
     "action": {},
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "scripts/background.js"
     },
     "commands": {
         "open-extension": {

@@ -24,7 +24,6 @@ function renderTasks() {
 
     chrome.storage.sync.get("tasks", function (result) {
         const tasks = result.tasks || [];
-        // console.log("Tasks retrieved:", tasks); // Debugging log
 
         // Clear existing tasks before rendering
         const taskList = document.querySelector("#list");
@@ -35,21 +34,41 @@ function renderTasks() {
         taskList.innerHTML = ""; // Clear existing tasks
 
         // Render each task
-        tasks.forEach((task) => {
+        tasks.forEach((task, index) => {
             const taskItem = document.createElement("div");
             taskItem.className = "task-item";
-            taskItem.innerHTML = `
+
+            // Create a checkbox for marking tasks as done
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = task.done || false; // Reflect the 'done' state
+            checkbox.addEventListener("change", () => {
+                tasks[index].done = checkbox.checked; // Update the 'done' state
+                chrome.storage.sync.set({ tasks }); // Save the updated tasks
+            });
+
+            // Style the task item based on the 'done' state
+            if (task.done) {
+                taskItem.style.textDecoration = "line-through";
+                taskItem.style.opacity = "0.6";
+            }
+
+            checkbox.style.marginRight = "10px";
+            taskItem.appendChild(checkbox);
+
+            taskItem.innerHTML += `
                 <h3>${task.task_name || "Unnamed Task"}</h3>
                 <p>${task.task_description || "No description"}</p>
                 <p>Priority: ${task.task_priority || "Not set"}</p>
                 <p>Deadline: ${task.task_deadline || "No deadline"}</p>
                 <p>Time: ${task.task_time || "No time"}</p>
             `;
+
             taskList.appendChild(taskItem);
         });
         console.log("Tasks rendered successfully.");
     })
-   
+
 }
 
 
@@ -508,7 +527,7 @@ function ask_deadline() {
         position: "fixed",
         width: "90%",
         maxWidth: "400px", // Limit width for better readability
-        height: "250px",
+        height: "300px",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
@@ -558,16 +577,62 @@ function ask_deadline() {
         textAlign: "center"
     });
 
-    // Add focus effect
-    deadlineInput.addEventListener("focus", () => {
-        deadlineInput.style.borderColor = "#007BFF";
-    });
+    // Set default value to today's date
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
 
-    deadlineInput.addEventListener("blur", () => {
-        deadlineInput.style.borderColor = "#ccc";
-    });
+    deadlineInput.value = today.toISOString().split("T")[0];
 
     deadlineDiv.appendChild(deadlineInput);
+
+    // Add buttons for "Today" and "Tomorrow"
+    const todayButton = document.createElement("button");
+    todayButton.textContent = "Today";
+    Object.assign(todayButton.style, {
+        height: "40px",
+        width: "150px",
+        margin: "10px 5px",
+        background: "#007BFF",
+        color: "#fff",
+        fontSize: "16px",
+        fontWeight: "600",
+        border: "none",
+        borderRadius: "8px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease"
+    });
+
+    todayButton.addEventListener("click", () => {
+        task_deadline = today.toISOString().split("T")[0];
+        alert("Task deadline is: " + task_deadline);
+        ask_time(); // Proceed to the next step
+    });
+
+    const tomorrowButton = document.createElement("button");
+    tomorrowButton.textContent = "Tomorrow";
+    Object.assign(tomorrowButton.style, {
+        height: "40px",
+        width: "150px",
+        margin: "10px 5px",
+        background: "#28a745",
+        color: "#fff",
+        fontSize: "16px",
+        fontWeight: "600",
+        border: "none",
+        borderRadius: "8px",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease"
+    });
+
+    tomorrowButton.addEventListener("click", () => {
+        task_deadline = tomorrow.toISOString().split("T")[0];
+        alert("Task deadline is: " + task_deadline);
+        ask_time(); // Proceed to the next step
+    });
+
+    deadlineDiv.appendChild(todayButton);
+    deadlineDiv.appendChild(tomorrowButton);
 
     // Add a confirm button
     const confirmButton = document.createElement("button");
@@ -592,14 +657,6 @@ function ask_deadline() {
         ask_time(); // Proceed to the next step
     });
 
-    confirmButton.addEventListener("mouseover", () => {
-        confirmButton.style.backgroundColor = "#0056b3";
-    });
-
-    confirmButton.addEventListener("mouseout", () => {
-        confirmButton.style.backgroundColor = "#007BFF";
-    });
-
     deadlineDiv.appendChild(confirmButton);
 
     document.body.appendChild(deadlineDiv);
@@ -614,7 +671,6 @@ function ask_deadline() {
             ask_time(); // Proceed to the next step
         }
     });
-    confirmButton.addEventListener("click", ask_time);
 }
 
 // ask time 
@@ -952,7 +1008,7 @@ function send_data() {
             // Update the UI by re-rendering tasks
             location.reload(); // Reload the page to reflect changes
             // renderTasks(); // Alternatively, you can call renderTasks() to update the UI without reloading
-        
+
         });
     });
 }

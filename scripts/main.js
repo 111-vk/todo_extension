@@ -59,9 +59,7 @@ function renderTasks() {
     document.getElementById("priority-2").innerHTML = "";
     document.getElementById("priority-3").innerHTML = "";
 
-
-
-    tasks.forEach(task => {
+    tasks.forEach((task, index) => {
       console.log("Rendering task:", task); // Debugging log
       console.log("Task priority:", task.task_priority); // Debugging log for priority
 
@@ -76,7 +74,6 @@ function renderTasks() {
         fontFamily: "'Arial', sans-serif",
         fontSize: "0.9rem", // Slightly smaller font for a compact feel
         color: "#ffffff", // Keep white text for contrast
-        // borderLeft: `3px solid ${priorityColors[task.task_priority] || "#ffffff"}`, // Thinner priority-based border
         transition: "transform 0.2s ease" // Simplified transition (removed box-shadow transition)
       });
 
@@ -89,7 +86,7 @@ function renderTasks() {
           <strong>Priority:</strong> ${task.task_priority || "Not set"}
         </p>
         <p style="margin: 5px 0; font-size: 0.9rem;">
-          <strong>Deadline:</strong> ${task.task_deadline || "No deadline"}
+          <strong>Deadline / Date:</strong> ${task.task_deadline || "No deadline"}
         </p>
         <p style="margin: 5px 0; font-size: 0.9rem;">
           <strong>Time:</strong> ${task.task_time || "No time"}
@@ -98,9 +95,11 @@ function renderTasks() {
           <strong>Description:</strong> ${task.task_description || "No description"}
         </p>
       `;
+
       // Add a checkbox to mark the task as done
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
+      checkbox.checked = task.done || false; // Reflect the 'done' state
       checkbox.style.marginRight = "10px";
       checkbox.addEventListener("change", () => {
         if (checkbox.checked) {
@@ -110,7 +109,15 @@ function renderTasks() {
           taskDiv.style.textDecoration = "none";
           taskDiv.style.opacity = "1";
         }
+        tasks[index].done = checkbox.checked; // Update the 'done' state
+        chrome.storage.sync.set({ tasks }); // Save the updated tasks
       });
+
+      // Style the task item based on the 'done' state
+      if (task.done) {
+        taskDiv.style.textDecoration = "line-through";
+        taskDiv.style.opacity = "0.6";
+      }
 
       // Add a button to remove the task
       const removeButton = document.createElement("button");
@@ -128,12 +135,9 @@ function renderTasks() {
       removeButton.addEventListener("click", () => {
         taskDiv.remove();
         // Optionally, remove the task from storage
-        chrome.storage.sync.get("tasks", function (result) {
-          const tasks = result.tasks || [];
-          const updatedTasks = tasks.filter(t => t.task_name !== task.task_name);
-          chrome.storage.sync.set({ tasks: updatedTasks }, () => {
-            console.log("Task removed successfully:", task.task_name);
-          });
+        const updatedTasks = tasks.filter((_, i) => i !== index);
+        chrome.storage.sync.set({ tasks: updatedTasks }, () => {
+          console.log("Task removed successfully:", task.task_name);
         });
       });
 
