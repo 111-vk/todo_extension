@@ -1,7 +1,7 @@
 console.log("Backend script is running...");
 document.addEventListener("DOMContentLoaded", function () {
     // console.log("DOM fully loaded and parsed. Initializing event listeners...");
-    add_button.click();
+    // add_button.click();
 });
 
 const add_button = document.querySelector("#add");
@@ -73,83 +73,6 @@ function renderTasks() {
 
 
 // i was trying to make it look good :(
-
-
-// function renderTasks() {
-//   console.log("Rendering tasks...");
-
-//   // Retrieve tasks from chrome.storage.sync
-//   chrome.storage.sync.get("tasks", function (result) {
-//     const tasks = result.tasks || [];
-//     console.log("Tasks retrieved:", tasks); // Debugging log
-
-//     // Clear existing tasks in priority containers
-//     document.getElementById("priority-1").innerHTML = "";
-//     document.getElementById("priority-2").innerHTML = "";
-//     document.getElementById("priority-3").innerHTML = "";
-
-
-
-//     tasks.forEach(task => {
-//       console.log("Rendering task:", task); // Debugging log
-//       console.log("Task priority:", task.task_priority); // Debugging log for priority
-
-//       const taskDiv = document.createElement("div");
-//       taskDiv.classList.add("task");
-//       Object.assign(taskDiv.style, {
-//         width: "98%", // Slightly wider for a cleaner edge-to-edge look
-//         margin: "5px auto", // Reduced margin for a tighter layout
-//         padding: "10px", // Reduced padding for simplicity
-//         borderRadius: "5px", // Smaller radius for a sharper look
-//         background: "rgba(black)", // Lighter background for minimalism
-//         fontFamily: "'Arial', sans-serif",
-//         fontSize: "0.9rem", // Slightly smaller font for a compact feel
-//         color: "#ffffff", // Keep white text for contrast
-//         // borderLeft: `3px solid ${priorityColors[task.task_priority] || "#ffffff"}`, // Thinner priority-based border
-//         transition: "transform 0.2s ease" // Simplified transition (removed box-shadow transition)
-//       });
-
-//       // Add task details with better formatting
-//       taskDiv.innerHTML = `
-//         <h3 style="margin: 0 0 10px; font-size: 1.2rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">
-//           ${task.task_name || "Unnamed Task"}
-//         </h3>
-//         <p style="margin: 5px 0; font-size: 0.9rem;">
-//           <strong>Priority:</strong> ${task.task_priority || "Not set"}
-//         </p>
-//         <p style="margin: 5px 0; font-size: 0.9rem;">
-//           <strong>Deadline:</strong> ${task.task_deadline || "No deadline"}
-//         </p>
-//         <p style="margin: 5px 0; font-size: 0.9rem;">
-//           <strong>Time:</strong> ${task.task_time || "No time"}
-//         </p>
-//         <p style="margin: 5px 0; font-size: 0.9rem;">
-//           <strong>Description:</strong> ${task.task_description || "No description"}
-//         </p>
-//       `;
-
-
-//       // Append to the appropriate priority container
-//       if (task.task_priority === "high") {
-//         console.log("Appending to High priority container"); // Debugging log
-//         const priorityContainer = document.getElementById("priority-1");
-//         priorityContainer.appendChild(taskDiv);
-//       } else if (task.task_priority === "medium") {
-//         console.log("Appending to Medium priority container"); // Debugging log
-//         const priorityContainer = document.getElementById("priority-2");
-//         priorityContainer.appendChild(taskDiv);
-//       } else if (task.task_priority === "low") {
-//         console.log("Appending to Low priority container"); // Debugging log
-//         const priorityContainer = document.getElementById("priority-3");
-//         priorityContainer.appendChild(taskDiv);
-//       } else {
-//         console.warn("Task priority does not match any container:", task.task_priority); // Debugging log for unmatched priority
-//       }
-//     });
-//   });
-// }
-
-
 
 
 
