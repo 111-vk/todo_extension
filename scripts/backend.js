@@ -1,7 +1,7 @@
 console.log("Backend script is running...");
 document.addEventListener("DOMContentLoaded", function () {
     // console.log("DOM fully loaded and parsed. Initializing event listeners...");
-    // add_button.click();
+    add_button.click();
 });
 
 const add_button = document.querySelector("#add");
