@@ -18,20 +18,23 @@ The Notes Extension is a browser-based task management tool designed to help use
    - For Brave: `brave://extensions/`
 3. Enable "Developer mode" (usually a toggle in the top-right corner).
 4. Click on "Load unpacked" and select the folder containing the extension files.
+5. The extension should now be installed and visible in your browser's extensions list.
 
 
 
 ## Keybinds
-The default keybind to open the Notes Extension is `Ctrl+Shift+Y`.
+now you need to set a custom keybind to quickly open the Notes Extension, such as <kbd>Ctrl</kbd> + <kbd>Space</kbd>. 
 
-### How to Change the Keybind
+### How to add Keybind
 1. Open your browser and navigate to the extensions page:
    - For Chrome: `chrome://extensions/`
    - For Brave: `brave://extensions/`
 2. Scroll to the bottom of the page and click on "Keyboard shortcuts".
 3. Locate the Notes Extension in the list.
-4. Click on the current keybind and press the new key combination you want to use.
-5. Close the tab to save your changes.
+4. click on the **pencil icon** next to activate the extension. 
+5. now press the new key combination you want to use. (e.g., `Ctrl` + `Space`) 
+> note: do not use key combinations that are already in use by the browser or other extensions. 
+
 
 ## Development
 ### Prerequisites
