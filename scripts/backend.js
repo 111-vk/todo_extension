@@ -183,7 +183,7 @@ function ask_name() {
 
 function ask_description() {
     document.body.removeChild(document.getElementById("name_diver"));
-    alert("task name is " + task_name);
+    // alert("task name is " + task_name);
 
     const description_dive = document.createElement("div");
     description_dive.id = "description_diver";
@@ -295,7 +295,7 @@ function ask_priority() {
     // Remove the description div
     document.body.removeChild(document.getElementById("description_diver"));
     // Alert the task description
-    alert("Task description is: " + task_description);
+    // alert("Task description is: " + task_description);
 
     // Create the priority selection div
     const askPriorityDiv = document.createElement("div");
@@ -528,7 +528,7 @@ function ask_deadline() {
 
     todayButton.addEventListener("click", () => {
         task_deadline = today.toISOString().split("T")[0];
-        alert("Task deadline is: " + task_deadline);
+        // alert("Task deadline is: " + task_deadline);
         ask_time(); // Proceed to the next step
     });
 
@@ -550,7 +550,7 @@ function ask_deadline() {
 
     tomorrowButton.addEventListener("click", () => {
         task_deadline = tomorrow.toISOString().split("T")[0];
-        alert("Task deadline is: " + task_deadline);
+        // alert("Task deadline is: " + task_deadline);
         ask_time(); // Proceed to the next step
     });
 
@@ -576,7 +576,7 @@ function ask_deadline() {
 
     confirmButton.addEventListener("click", () => {
         task_deadline = deadlineInput.value;
-        alert("Task deadline is: " + task_deadline);
+        // alert("Task deadline is: " + task_deadline);
         ask_time(); // Proceed to the next step
     });
 
@@ -590,7 +590,7 @@ function ask_deadline() {
     deadlineInput.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
             task_deadline = deadlineInput.value;
-            alert("Task deadline is: " + task_deadline);
+            // alert("Task deadline is: " + task_deadline);
             ask_time(); // Proceed to the next step
         }
     });
@@ -677,7 +677,7 @@ function ask_time() {
 
     done_button.addEventListener("click", () => {
         task_time = timeInput.value;
-        alert("Task time is: " + task_time);
+        // alert("Task time is: " + task_time);
         document.body.removeChild(timeDiv);
         test(); // Call test function to log details
         showtdata(); // Call showtdata to display the final details
@@ -853,7 +853,7 @@ function showtdata() {
     document.body.appendChild(finalDiv);
     // Store the task details in localStorage
     confirmButton.addEventListener("click", () => {
-        alert("Task has been added successfully!");
+        // alert("Task has been added successfully!");
         document.body.removeChild(finalDiv);
         send_data();
         document.body.removeChild(document.getElementById("time_div"));
