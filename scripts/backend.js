@@ -71,11 +71,7 @@ function renderTasks() {
 
 }
 
-
 // i was trying to make it look good :(
-
-
-
 
 function ask_name() {
     const name_diver = document.createElement("div");
@@ -179,8 +175,6 @@ function ask_name() {
     });
 }
 
-
-
 function ask_description() {
     document.body.removeChild(document.getElementById("name_diver"));
     // alert("task name is " + task_name);
@@ -265,20 +259,33 @@ function ask_description() {
     document.body.appendChild(description_dive);
 
 
-    // Add event listener for Escape key to remove the description div
+    // Add event listener for Escape key to close the description dialog
     description_dive.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
             const description_diver = document.getElementById("description_diver");
             if (description_diver) {
                 document.body.removeChild(description_diver);
             }
-        } else if (event.key === " ") {
-            // If space is pressed, skip to priority selection
-            task_description = "No description provided"; // Default value if skipped
-            ask_priority(); // Proceed to priority selection
         }
     });
 
+    // Add event listener on input to support skipping only when empty
+    description_input.addEventListener("keydown", (event) => {
+        if (event.key === " " && description_input.value.trim() === "") {
+            event.preventDefault();
+            task_description = "No description provided"; // Default value if skipped
+            const description_diver = document.getElementById("description_diver");
+            if (description_diver) {
+                ask_priority();
+                document.body.removeChild(description_diver);
+            }
+        }
+
+        if (event.key === "Enter") {
+            task_description = description_input.value;
+            ask_priority();
+        }
+    });
 
 
     description_input.focus();
@@ -431,7 +438,6 @@ function test() {
     ask_deadline(); // Call ask_deadline to proceed to the next step
 
 }
-
 
 function ask_deadline() {
     // Check if the priority selection div exists before removing it
@@ -861,39 +867,6 @@ function showtdata() {
 
     });
 }
-
-// send the data to localStorage and reload the page
-// function send_data() {
-//     // Retrieve the existing tasks from localStorage
-//     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-//     // Create a new task object
-//     const newTask = {
-//         task_name: task_name,
-//         task_description: task_description,
-//         task_priority: task_priority,
-//         task_deadline: task_deadline,
-//         task_time: task_time
-//     };
-
-//     // Add the new task to the tasks array
-//     tasks.push(newTask);
-
-//     // Save the updated tasks array back to localStorage
-//     localStorage.setItem("tasks", JSON.stringify(tasks));
-
-//     // Clear the task details after sending
-//     task_name = "";
-//     task_description = "";
-//     task_priority = "";
-//     task_deadline = "";
-//     task_time = "";
-
-//     // Reload the page or update the UI
-//     location.reload();
-// }
-
-
 
 function send_data() {
     if (!chrome.storage || !chrome.storage.sync) {
